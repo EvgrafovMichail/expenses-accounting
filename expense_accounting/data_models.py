@@ -1,38 +1,33 @@
-import datetime
 import decimal
+from functools import partial
 from typing import (
+    Annotated,
     Any,
     Final,
 )
 
 from pydantic import (
     BaseModel,
+    BeforeValidator,
     field_validator,
 )
 
 from expense_accounting.constants import DATE_FORMAT
+from expense_accounting.utils import check_date_satisfy_given_date_format
 
 
 PRECISION: Final[decimal.Decimal] = decimal.Decimal(".01")
 
 
 class Expense(BaseModel):
-    date: str
+    date: Annotated[
+        str,
+        BeforeValidator(
+            partial(check_date_satisfy_given_date_format, date_format=DATE_FORMAT)
+        ),
+    ]
     category: str
     expense: decimal.Decimal
-
-    @field_validator("date", mode="after")
-    @classmethod
-    def check_date_satisfy_Ymd_date_format(cls, date_str: str) -> str:
-        try:
-            datetime.datetime.strptime(date_str, DATE_FORMAT)
-
-        except ValueError:
-            raise ValueError(
-                f"date string {date_str!r} doesn't match date format {DATE_FORMAT!r}"
-            ) from None
-
-        return date_str
 
     @field_validator("expense", mode="before")
     @classmethod

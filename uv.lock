@@ -396,7 +396,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pandas", specifier = ">=3.0.0" }]
+requires-dist = [{ name = "pandas", specifier = "==3.0.0" }]
 
 [package.metadata.requires-dev]
 dev = [

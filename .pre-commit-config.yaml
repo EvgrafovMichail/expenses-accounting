@@ -1,0 +1,35 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.2.0
+  hooks:
+  - id: trailing-whitespace
+    name: Remove trailing whitespaces
+    stages: [pre-commit]
+  - id: end-of-file-fixer
+    name: Add missed new lines for EOF
+    stages: [pre-commit]
+  - id: check-yaml
+    name: Format YAML files
+    stages: [pre-commit]
+  - id: check-added-large-files
+    name: Check no large files were added
+    stages: [pre-commit]
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.15.0
+  hooks:
+  - id: ruff-check
+    name: Lint Python-code
+    stages: [pre-commit]
+  - id: ruff-format
+    name: Format Python-code
+    stages: [pre-commit]
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.19.1
+  hooks:
+  - id: mypy
+    name: Check types
+    stages: [pre-commit]
+    args: [--strict]
+    additional_dependencies: [pandas==3.0.0]

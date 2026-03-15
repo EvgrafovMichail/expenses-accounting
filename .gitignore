@@ -11,3 +11,4 @@ wheels/
 
 # Files for debug
 *.ipynb
+*.csv

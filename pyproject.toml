@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pandas==3.0.0",
+    "pandas-stubs==3.0.0.260204",
+    "pydantic==2.12.5",
 ]
 
 [dependency-groups]
@@ -25,6 +27,7 @@ include = [
     "*.py",
     "*.pyi"
 ]
+line-length = 88
 
 [tool.ruff.lint]
 extend-select = ["I"]  # Add Isort rules

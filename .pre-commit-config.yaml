@@ -32,4 +32,8 @@ repos:
     name: Check types
     stages: [pre-commit]
     args: [--strict]
-    additional_dependencies: [pandas==3.0.0, pydantic==2.12.5]
+    additional_dependencies: [
+      pandas==3.0.0,
+      pandas-stubs==3.0.0.260204,
+      pydantic==2.12.5
+    ]

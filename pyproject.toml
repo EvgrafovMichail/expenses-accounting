@@ -26,6 +26,7 @@ include = [
     "*.py",
     "*.pyi"
 ]
+line-length = 88
 
 [tool.ruff.lint]
 extend-select = ["I"]  # Add Isort rules

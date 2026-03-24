@@ -3,7 +3,6 @@ from functools import partial
 from typing import (
     Annotated,
     Any,
-    Final,
 )
 
 from pydantic import (
@@ -12,11 +11,11 @@ from pydantic import (
     field_validator,
 )
 
-from expense_accounting.constants import DATE_FORMAT
+from expense_accounting.constants import (
+    DATE_FORMAT,
+    PRECISION,
+)
 from expense_accounting.utils import check_date_satisfy_given_date_format
-
-
-PRECISION: Final[decimal.Decimal] = decimal.Decimal(".01")
 
 
 class Expense(BaseModel):

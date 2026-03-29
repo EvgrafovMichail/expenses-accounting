@@ -36,3 +36,7 @@ extend-select = ["I"]  # Add Isort rules
 [tool.ruff.lint.isort]
 lines-after-imports = 2
 split-on-trailing-comma = true
+
+[[tool.mypy.overrides]]
+module = "matplotlib.*"
+ignore_missing_imports = true

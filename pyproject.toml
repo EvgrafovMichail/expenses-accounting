@@ -38,5 +38,5 @@ lines-after-imports = 2
 split-on-trailing-comma = true
 
 [[tool.mypy.overrides]]
-module = "matplotlib.*"
+module = ["matplotlib", "matplotlib.*"]
 ignore_missing_imports = true

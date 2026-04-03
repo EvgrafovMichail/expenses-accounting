@@ -1,13 +1,22 @@
 import calendar
 import datetime
 import decimal
+import math
+from enum import Enum
 from typing import Final
 
 from expense_accounting.constants import DATE_FORMAT
 from expense_accounting.data_models.reports import (
+    BarsData,
     TimeSeriesData,
     TimeShiftHint,
 )
+
+
+class OrderType(Enum):
+    ASC = "asc"
+    AS_IS = "as_is"
+    DESC = "desc"
 
 
 class DataConverter:
@@ -37,6 +46,33 @@ class DataConverter:
             time_shifts=time_shifts,
             expenses=expenses,
             hints=hints,
+        )
+
+    @classmethod
+    def convert_category_to_expense_mapping_to_bars_data(
+        cls,
+        category_to_expense: dict[str, decimal.Decimal],
+        *,
+        order_type: str | OrderType = OrderType.AS_IS,
+        log_scale: bool = False,
+    ) -> BarsData:
+        if not category_to_expense:
+            return BarsData()
+
+        bars_data_pairs = cls._get_bars_data_pairs(
+            category_to_expense=category_to_expense,
+            order_type=OrderType(order_type),
+        )
+        expenses, categories = cls._split_pairs_to_different_lists(
+            bars_data_pairs=bars_data_pairs,
+            log_scale=log_scale,
+        )
+
+        return BarsData(
+            bar_positions=list(range(len(expenses))),
+            expenses=expenses,
+            categories=categories,
+            log_scale=log_scale,
         )
 
     @staticmethod
@@ -85,3 +121,44 @@ class DataConverter:
             hints.append(hint)
 
         return hints
+
+    @staticmethod
+    def _get_bars_data_pairs(
+        category_to_expense: dict[str, decimal.Decimal],
+        order_type: OrderType,
+    ) -> list[tuple[str, decimal.Decimal]]:
+        if order_type is OrderType.AS_IS:
+            return list(category_to_expense.items())
+
+        return sorted(
+            category_to_expense.items(),
+            key=lambda x: x[-1],
+            reverse=order_type is OrderType.DESC,
+        )
+
+    @classmethod
+    def _split_pairs_to_different_lists(
+        cls,
+        bars_data_pairs: list[tuple[str, decimal.Decimal]],
+        log_scale: bool,
+    ) -> tuple[list[decimal.Decimal], list[str]]:
+        transform_expense = cls._get_log_expense if log_scale else cls._do_nothing
+        expenses = list[decimal.Decimal]()
+        categories = list[str]()
+
+        for category, expense in bars_data_pairs:
+            expenses.append(transform_expense(expense))
+            categories.append(category)
+
+        return expenses, categories
+
+    @staticmethod
+    def _get_log_expense(expense: decimal.Decimal) -> decimal.Decimal:
+        if expense <= 0:
+            return expense
+
+        return decimal.Decimal(math.log(expense))
+
+    @staticmethod
+    def _do_nothing(expense: decimal.Decimal) -> decimal.Decimal:
+        return expense

@@ -9,7 +9,16 @@ class TimeShiftHint(BaseModel):
     hint: str
 
 
+# TODO: add validation
 class TimeSeriesData(BaseModel):
     time_shifts: list[float] = []
     expenses: list[decimal.Decimal] = []
     hints: list[TimeShiftHint] = []
+
+
+# TODO: add validation
+class BarsData(BaseModel):
+    bar_positions: list[float] = []
+    expenses: list[decimal.Decimal] = []
+    categories: list[str] = []
+    log_scale: bool = False
